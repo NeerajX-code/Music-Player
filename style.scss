@@ -46,12 +46,17 @@ nav {
         width: 65%;
         display: flex;
         align-items: center;
+<<<<<<< HEAD
         gap: 1.2rem;
            
+=======
+        gap: 1.5rem;
+
+>>>>>>> 4e8b6f8d27d7dc2488a3296f313bec0be82d3a8b
         input::placeholder {
-            color: rgba(247, 241, 241, 0.525); 
+            color: rgba(247, 241, 241, 0.525);
             font-family: 'General Sans';
-          }
+        }
 
         #music-input {
             background-color: rgba(62, 60, 60, 0.45);
@@ -64,7 +69,7 @@ nav {
         }
 
         #category-input {
-            background-color: rgb(62, 60, 60,0.45);
+            background-color: rgb(62, 60, 60, 0.45);
             width: 60%;
             padding: 0.8rem 1rem;
             border-radius: 50px;
@@ -73,9 +78,124 @@ nav {
             outline: none;
         }
 
-        i{
+        i {
             font-size: 1.5rem;
             color: rgba(255, 0, 0, 0.877);
+        }
+    }
+
+}
+
+section {
+    margin-top: 1.7rem;
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    height: 33rem;
+
+    .playlist-cont {
+        border-radius: 12px;
+        width: 25%;
+        background-color: rgba(16, 16, 15, 0.616);
+    }
+
+    .center {
+        width: 45%;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(16, 16, 15, 0.616);
+
+        .music-player {
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            width: 70%;
+            height: 60%;
+            background-color: rgba(0, 208, 255, 0.064);
+
+            .top {
+                border-radius: 12px;
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+
+                .album-art {
+                    background-color: rgba(40, 37, 37, 0.537);
+                    border-radius: 12px;
+                    width: fit-content;
+                    padding: 10px;
+
+                    img {
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                    }
+                }
+
+                .song-info {
+                    font-family: "helvetica";
+                    display: flex;
+                    flex-direction: column;
+                    gap: 18px;
+
+                    .song-title {
+                        background-color: rgba(40, 37, 37, 0.537);
+                        padding: 13px 65px;
+                        border-radius: 8px;
+                    }
+
+                    .song-artist {
+                        background-color: rgba(40, 37, 37, 0.537);
+                        padding: 13px 65px;
+                        border-radius: 8px;
+                    }
+                }
+            }
+
+            .progress-bar {
+                margin-top: 1rem;
+                padding: 1rem;
+                width: 100%;
+                background-color: rgba(0, 153, 255, 0.103);
+                border-radius: 50px;
+                display: flex;
+                gap: 10px;
+                font-family: "helvetica";
+                input{
+                    width: 80%;
+                }
+                span{
+                    opacity: .6;
+                }
+            }
+
+            .controls{
+                margin-top: 1rem;
+                display: flex;
+                justify-content: center;
+                gap: 1.5rem;
+                button{
+                    background: none;
+                    border: none;
+                    i{
+                        font-size: 2rem;
+                        color: rgb(255, 0, 0);
+                    }
+                }
+                   
+                // i:active{
+                //   scale: .90;
+                // }
+              
+            }
+
+        }
+
+        .lyrics {
+            width: 30%;
         }
     }
 
