@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(#0f0c29, #302b63, #24243e);
+  color: white;
+  padding: 2rem;
+}
+
+nav {
+  display: flex;
+  background-color: rgba(16, 16, 15, 0.616);
+  padding: 16px;
+  gap: 2rem;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+}
+nav .logo {
+  width: 35%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+nav .logo i {
+  font-size: 2rem;
+  color: rgb(196, 182, 182);
+}
+nav .logo p {
+  color: rgb(242, 61, 61);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 2rem;
+}
+nav .nav-input {
+  width: 65%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+nav .nav-input input::-moz-placeholder {
+  color: rgba(247, 241, 241, 0.525);
+  font-family: "General Sans";
+}
+nav .nav-input input::placeholder {
+  color: rgba(247, 241, 241, 0.525);
+  font-family: "General Sans";
+}
+nav .nav-input #music-input {
+  background-color: rgba(62, 60, 60, 0.45);
+  width: 40%;
+  padding: 1rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1.1rem;
+  outline: none;
+}
+nav .nav-input #category-input {
+  background-color: rgba(62, 60, 60, 0.45);
+  width: 60%;
+  padding: 1rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1.1rem;
+  outline: none;
+}
+nav .nav-input i {
+  font-size: 1.5rem;
+  color: rgba(255, 0, 0, 0.877);
+}/*# sourceMappingURL=style.css.map */
