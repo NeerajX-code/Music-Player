@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <nav>
+      <div class="logo">
+        MusAI
+      </div>
+      <div class="nav-input div">
+        <input type="text" id="music-input" placeholder="Seach Music">
+        <input type="text" id="category-input" placeholder="Search Music BY Artist ,Cat. Deshbhakti ,Romantic etc.">
+      </div>
+    </nav>
+    <section>
+      <div class="playlist-cont"></div>
+      <div class="main">
+        <div class="music-player">
+          <div class="top">
+            <div class="album-art">
+              <img src="https://via.placeholder.com/200" alt="Album Art">
+            </div>
+            <div class="song-info">
+              <p class="song-title">Song Title</p>
+              <p class="song-artist">Artist Name</p>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <span class="current-time">0:00</span>
+            <input type="range" value="0" max="100">
+            <span class="duration">3:25</span>
+          </div>
+          <div class="controls">
+            <button class="prev">◄</button>
+            <button class="play-pause">►</button>
+            <button class="next">►►</button>
+          </div>
+        </div>
+      </div>
+      <div class="lyrics">
+        <p>!No lyrics found</p>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
