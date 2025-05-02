@@ -21,7 +21,7 @@ class playlist {
        let playlistCont = document.querySelector(".playlist-cont");
        let item = document.createElement("div");
        item.setAttribute("id",index)
-       item.innerHTML = `${song.title}`
+       item.innerHTML = `<div class="item-img"> <img src="${song.poster}"> </div> <div class="item-details"><h3>${song.title}</h3><p>${song.artist}</div>`
        playlistCont.append(item)
     });
   }
