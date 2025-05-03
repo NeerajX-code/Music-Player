@@ -147,6 +147,7 @@ document.querySelector(".playlist-cont").addEventListener("click", (e) => {
   if (playlist1.songs.some((s) => song==s? s.Isplay:NaN)==false) {
     audio = new Audio(song.filePath);
     audio.play();
+    console.log(audio)
     song.Isplay = true;
   }
   else{

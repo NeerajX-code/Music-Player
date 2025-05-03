@@ -105,6 +105,8 @@ section {
             display: flex;
             gap: 0.4rem;
             margin-bottom: 0.5rem;
+            background-color: rgba(11, 52, 128, 0.199);
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
             .item-img{
                 width: 20%;
                 height: 4rem;
@@ -132,6 +134,11 @@ section {
                     color: rgba(227, 226, 226, 0.817);
                 }
             }
+        }
+        .item:hover{
+            background-color: #34343c82;
+            transform: scale(1.02);
+            cursor: pointer;
         }
     }
 
