@@ -233,7 +233,8 @@ section .center .music-player .controls button i {
 section .lyrics {
   width: 30%;
   overflow-y: scroll;
-  font-family: "helvetica";
+  font-family: "segoe ui";
+  font-size: 1.2rem;
   padding: 1.6rem;
   white-space: pre-wrap;
   border-radius: 12px;

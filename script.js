@@ -11,6 +11,8 @@ class Song {
 }
 
 let n = 2;
+let audio ;
+let i = document.querySelector(".play-pause i");
 class playlist {
   constructor() {
     this.songs = [];
@@ -27,15 +29,6 @@ class playlist {
       item.innerHTML = `<div class="item-img"> <img src="${song.poster}"> </div> <div class="item-details"><h3>${song.title}</h3><p>${song.artist}</div>`;
       playlistCont.append(item);
     });
-  }
-  playSong(index) {
-    let song = this.songs[index];
-    let audio = new Audio(song.filePath);
-    if (song && !song.play) {
-      song.play = true; // Set the play property to true
-      audio.play();
-      console.log(`Playing: ${song.title} by ${song.artist}`);
-    }
   }
   loadToPlayer(index){
     function secondToMilisecond(second){
@@ -60,42 +53,38 @@ class playlist {
       controls.style.left = "42.5%";
       controls.style.transform = "scale(1.5)";
       controls.style.transition = "all 0.5s ease-in-out";
-     PlayPause.innerHTML = `<i class="ri-pause-line"></i>`;
+      PlayPause.innerHTML = `<i class="ri-pause-line"></i>`;
+      PlayPause.setAttribute("id",index);
       img.setAttribute("src", song.poster);
       title.innerText = song.title;
       artist.innerText = song.artist;
       lyricsPara.innerText = song.lyrics;
       let dura = String(song.duration).split(".");
-      if (dura[1] == undefined) {
-        dura[1] = "00";
-      } else if (dura[1].length == 1) {
-        dura[1] = `${dura[1]}0`;
-      }
-      else{
-        duration.innerText = `${dura[0]}:${dura[1]}`;
-      }
-      let total = secondToMilisecond(dura[0]) + minutesToMiliseconds(dura[1]);
-      console.log(total);
+      let mins = parseInt(dura[0]);
+      let secs = dura[1] ? parseInt(dura[1].padEnd(2, "0")) : 0;
+    
+      // Update text duration
+      duration.innerText = `${mins}:${secs.toString().padStart(2, "0")}`;
+    
+      // Convert to total ms
+      let total = minutesToMiliseconds(mins) + secondToMilisecond(secs);
+      timeline.max = total;
       let current = 0;
-      let Onepercent = total * 1 / 100;
-      console.log(Onepercent);
-    let range =  setInterval(() =>{
-        console.log("hello");
-        current +=Onepercent/10;
-        timeline.value = current;
-        timeline.max = total;
-        console.log(current) 
-        if (current >= total) {
-          current = 0;
+    
+      let range = setInterval(() => {
+        current += 1000; // increase by 1 second (1000ms)
+        if (current > total) {
+          clearInterval(range);
           timeline.value = 0;
           audio.pause();
           song.play = false;
-          range = clearInterval(range);
+        } else {
+          timeline.value = current;
         }
-      },1000);
-
+      }, 1000);
   }
-}
+  }
+
 let playlist1 = new playlist();
 let songs = async () => {
   try {
@@ -128,9 +117,61 @@ const showMusic = () => {
 window.addEventListener("load", () => {
   showMusic();
 });
-
 document.querySelector(".playlist-cont").addEventListener("click", (e) => {
+  let target = e.target.closest(".item").id;
+  console.log(target);
+  playlist1.loadToPlayer(target);
+  if (playlist1.songs.some((s) => s.Isplay==true)) {
+    let index = playlist1.songs.findIndex((s) => s.Isplay == true);
+    let song = playlist1.songs[index];
+    if (index == target)  {
+      audio.pause();
+      song.Isplay = false;
+      document.querySelector(".play-pause").innerHTML = `<i class="ri-play-circle-fill"></i>`;
+    }
+    else{
+    audio.pause();
+    song.Isplay = false;
+    let newSong = playlist1.songs[target];
+    audio = new Audio(newSong.filePath);
+    audio.play();
+    newSong.Isplay = true;
+    playlist1.loadToPlayer(target);
+    document.querySelector(".play-pause").innerHTML = `<i class="ri-pause-line"></i>`;
+    }
+  }
+  else{
   let index = e.target.closest(".item").id;
-  playlist1.loadToPlayer(index);
-  playlist1.playSong(index);
+  let song = playlist1.songs[index];
+  console.log(song);
+  if (playlist1.songs.some((s) => song==s? s.Isplay:NaN)==false) {
+    audio = new Audio(song.filePath);
+    audio.play();
+    song.Isplay = true;
+  }
+  else{
+    audio.pause();
+    song.Isplay = false;
+  }
+}
+});
+
+ document.querySelector(".play-pause").addEventListener("click", (e) => {
+  console.log("Hello from play-pause");
+  let index = Number(e.target.id);
+  console.log(typeof(index));
+  let song = playlist1.songs[index];
+  console.log(song);
+  if (song.Isplay == true) {
+    audio.pause();
+    song.Isplay = false;
+    document.querySelector(".play-pause").innerHTML = `<i class="ri-play-circle-fill"></i>`;
+  }
+  else{
+    audio.play();
+    song.Isplay = true;
+    e.target.innerHTML = "";
+    document.querySelector(".play-pause").innerHTML = `<i class="ri-pause-line"></i>`;
+  }
+
 });
