@@ -104,6 +104,8 @@ section .playlist-cont .item {
   display: flex;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
+  background-color: rgba(11, 52, 128, 0.199);
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 section .playlist-cont .item .item-img {
   width: 20%;
@@ -132,6 +134,11 @@ section .playlist-cont .item .item-details p {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 0.8rem;
   color: rgba(227, 226, 226, 0.817);
+}
+section .playlist-cont .item:hover {
+  background-color: rgba(52, 52, 60, 0.5098039216);
+  transform: scale(1.02);
+  cursor: pointer;
 }
 section .center {
   width: 45%;
