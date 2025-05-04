@@ -84,6 +84,7 @@ nav .nav-input #category-input {
 nav .nav-input i {
   font-size: 1.5rem;
   color: rgba(255, 0, 0, 0.877);
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 section {
@@ -136,11 +137,13 @@ section .center .music-player .top .album-art img {
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 section .center .music-player .top .song-info {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 section .center .music-player .top .song-info .song-title {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
@@ -149,6 +152,7 @@ section .center .music-player .top .song-info .song-title {
   padding: 13px 65px;
   border-radius: 8px;
   text-align: center;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 section .center .music-player .top .song-info .song-artist {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
@@ -200,13 +204,16 @@ section .center .music-player .controls button i {
 }
 section .lyrics {
   width: 30%;
-  overflow-y: scroll;
   font-family: "segoe ui";
   font-size: 1.2rem;
-  padding: 1.6rem;
-  white-space: pre-wrap;
+  padding: 0;
+  text-align: center;
+  text-transform: capitalize;
   border-radius: 12px;
   background-color: rgba(16, 16, 15, 0.616);
+}
+section .lyrics p {
+  color: #b9b9bd;
 }
 
 .item {
@@ -258,6 +265,7 @@ section .lyrics {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 1rem;
   padding-top: 5px;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .found-song .item {
   padding-bottom: 0;
@@ -278,6 +286,7 @@ section .lyrics {
   font-size: 1rem;
   gap: 0.5rem;
   padding-top: 5px;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .found2-song .item {
   padding-bottom: 0;
@@ -291,4 +300,208 @@ section .lyrics {
   -o-object-fit: cover;
      object-fit: cover;
   aspect-ratio: 1/1;
+}
+
+.music-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 60px;
+}
+
+.music-loader span {
+  display: inline-block;
+  width: 6px;
+  height: 30px;
+  background: rgb(255, 0, 0); /* Spotify green */
+  animation: bounce 1s infinite ease-in-out;
+  border-radius: 3px;
+}
+
+.music-loader span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.music-loader span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.music-loader span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.music-loader span:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.music-loader span:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.music-loader span:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+.muisc-loader span:nth-child(7) {
+  animation-delay: 0.6s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.pulse {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem;
+  border-radius: 8px;
+  animation: shine 1.5s infinite;
+}
+
+.pulse span {
+  display: inline-block;
+  border-radius: 4px;
+  height: 4%;
+  background-color: rgba(82, 82, 85, 0.5607843137);
+  animation: shine 1.2s linear infinite;
+}
+
+.pulse span:nth-child(1) {
+  width: 98%;
+  animation-delay: 0s;
+}
+
+.pulse span:nth-child(2) {
+  width: 60%;
+  animation-delay: 0.1s;
+}
+
+.pulse span:nth-child(3) {
+  width: 80%;
+  animation-delay: 0.2s;
+}
+
+.pulse span:nth-child(4) {
+  width: 45%;
+  animation-delay: 0.3s;
+}
+
+.pulse span:nth-child(5) {
+  width: 54%;
+  animation-delay: 0.4s;
+}
+
+.pulse span:nth-child(6) {
+  width: 68%;
+  animation-delay: 0.5s;
+}
+
+.pulse span:nth-child(7) {
+  width: 86%;
+  animation-delay: 0.6s;
+}
+
+.pulse span:nth-child(8) {
+  width: 92%;
+  animation-delay: 0.7s;
+}
+
+.pulse span:nth-child(9) {
+  width: 58%;
+  animation-delay: 0.8s;
+}
+
+.pulse span:nth-child(10) {
+  width: 36%;
+  animation-delay: 0.9s;
+}
+
+.pulse span:nth-child(11) {
+  width: 42%;
+  animation-delay: 1s;
+}
+
+.pulse span:nth-child(12) {
+  width: 58%;
+  animation-delay: 1.1s;
+}
+
+.pulse span:nth-child(13) {
+  width: 80%;
+  animation-delay: 1.2s;
+}
+
+.pulse span:nth-child(14) {
+  width: 56%;
+  animation-delay: 1.3s;
+}
+
+.pulse span:nth-child(15) {
+  width: 72%;
+  animation-delay: 1.4s;
+}
+
+.pulse span:nth-child(16) {
+  width: 92%;
+  animation-delay: 1.5s;
+}
+
+.pulse span:nth-child(17) {
+  width: 86%;
+  animation-delay: 1.6s;
+}
+
+.pulse span:nth-child(18) {
+  width: 54%;
+  animation-delay: 1.7s;
+}
+
+.pulse span:nth-child(19) {
+  width: 80%;
+  animation-delay: 1.8s;
+}
+
+.pulse span:nth-child(20) {
+  width: 92%;
+  animation-delay: 1.9s;
+}
+
+.pulse span:nth-child(21) {
+  width: 98%;
+  animation-delay: 2s;
+}
+
+.pulse span:nth-child(22) {
+  width: 86%;
+  animation-delay: 2.1s;
+}
+
+@keyframes shine {
+  0% {
+    background: rgba(66, 76, 103, 0.4901960784);
+    box-shadow: none;
+  }
+  50% {
+    background: rgba(27, 37, 58, 0.137254902);
+  }
+  100% {
+    background: rgba(66, 76, 103, 0.4901960784);
+    box-shadow: none;
+  }
+}
+@keyframes shine2 {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }/*# sourceMappingURL=style.css.map */
