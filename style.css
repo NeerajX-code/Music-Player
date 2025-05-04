@@ -45,6 +45,9 @@ nav .logo p {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 2rem;
 }
+nav .logo #music-input {
+  display: none;
+}
 nav .nav-input {
   width: 65%;
   display: flex;
@@ -93,7 +96,7 @@ section {
   display: flex;
   gap: 1.5rem;
   width: 100%;
-  height: 36rem;
+  height: 34rem !important;
 }
 section .playlist-cont {
   border-radius: 12px;
@@ -503,5 +506,112 @@ section .lyrics p {
   }
   100% {
     background-position: 200% 0;
+  }
+}
+@media (max-width: 450px) {
+  main {
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  nav .logo {
+    width: 100%;
+    justify-content: space-between;
+    align-items: end;
+  }
+  nav .logo input::-moz-placeholder {
+    color: rgba(247, 241, 241, 0.525);
+    font-family: "General Sans";
+  }
+  nav .logo input::placeholder {
+    color: rgba(247, 241, 241, 0.525);
+    font-family: "General Sans";
+  }
+  nav .logo #music-input {
+    width: 100%;
+    display: block;
+    font-family: monospace;
+    color: rgba(255, 255, 255, 0.799);
+    background-color: rgba(62, 60, 60, 0.45);
+    padding: 0.8rem 1rem;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.1rem;
+    outline: none;
+  }
+  nav .nav-input {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  nav .nav-input input {
+    width: 100%;
+  }
+  nav .nav-input #music-input {
+    display: none;
+  }
+  nav .nav-input #category-input {
+    width: 100%;
+  }
+  section {
+    height: -moz-fit-content;
+    height: fit-content;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  section .playlist-cont {
+    width: 100%;
+    height: 20rem !important;
+  }
+  section .center {
+    width: 100%;
+    height: -moz-fit-content;
+    height: fit-content;
+    align-items: flex-start;
+  }
+  section .center top {
+    padding: 1rem;
+  }
+  section .center .top {
+    padding: 0.5rem !important;
+  }
+  section .center .music-player {
+    width: 96%;
+    padding-top: 1rem;
+    align-items: flex-start;
+    height: -moz-fit-content;
+    height: fit-content;
+    padding: 2rem 1rem;
+  }
+  section .center .music-player .song-info {
+    width: 64%;
+  }
+  section .center .music-player .song-info .song-title {
+    width: 100%;
+    padding: 0rem 0rem !important;
+  }
+  section .center .music-player .song-info .song-artist {
+    width: 100%;
+    padding: 0rem 0rem !important;
+  }
+  section .center .controls {
+    width: 98% !important;
+    padding-top: 1rem;
+    position: static !important;
+    gap: 1rem;
+  }
+  section .lyrics {
+    width: 100%;
+    height: 400px;
+  }
+  .found-song {
+    left: 4.5% !important;
+  }
+  .found2-song {
+    width: 80% !important;
+    left: 2% !important;
   }
 }/*# sourceMappingURL=style.css.map */
