@@ -6,145 +6,174 @@ class Song {
     this.lyrics = lyrics;
     this.poster = poster;
     this.duration = duration;
-    this.Isplay = false;
+    this.isPlaying = false;
   }
 }
 
-let audio;
-let current;
+let audio = null;
+let playlist1 = null;
 let currentIndex = 0;
-let i = document.querySelector(".play-pause i");
-let prev = document.querySelector(".prev");
-let next = document.querySelector(".next");
+let lyricsLoadedIndex = null;
+const musicPlayerBox = document.querySelector(".music-player");
 
-class playlist {
+class Playlist {
   constructor() {
     this.songs = [];
     this.range = null;
     this.currentTime = 0;
   }
+
   addSong(song) {
     this.songs.push(song);
   }
+
   showListOfSongs() {
-    let playlistCont = document.querySelector(".playlist-cont");
-    playlistCont.innerHTML = `<div class="music-loader">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-</div>`;
-    let loader = document.querySelector(".music-loader");
-    loader.style.display = "block";
+    const playlistCont = document.querySelector(".playlist-cont");
+    playlistCont.innerHTML = `
+      <div class="music-loader">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>`;
+    const loader = document.querySelector(".music-loader");
+    loader.style.display = "flex";
     playlistCont.style.display = "flex";
     playlistCont.style.alignItems = "center";
     playlistCont.style.justifyContent = "center";
+
     setTimeout(() => {
       loader.style.display = "none";
       playlistCont.style.display = "block";
       this.songs.forEach((song, index) => {
-        let item = document.createElement("div");
+        const item = document.createElement("div");
         item.classList.add("item");
         item.setAttribute("id", index);
-        item.innerHTML = `<div class="item-img"> <img src="${song.poster}"> </div> <div class="item-details"><h3>${song.title}</h3><p>${song.artist}</div>`;
+        item.innerHTML = `
+          <div class="item-img"><img src="${song.poster}"></div>
+          <div class="item-details"><h3>${song.title}</h3><p>${song.artist}</p></div>`;
         playlistCont.append(item);
       });
-    }, 2500);
+    }, 1500);
   }
+
   loadToPlayer(index) {
     document.querySelector(".pulse").style.display = "none";
-    function secondToMilisecond(second) {
-      let milisecond = second * 1000;
-      return milisecond;
-    }
-    function minutesToMiliseconds(minutes) {
-      let milisecond = minutes * 60 * 1000;
-      return milisecond;
+
+    // Clear existing interval
+    if (this.range) {
+      clearInterval(this.range);
+      this.range = null;
     }
 
-    let song = this.songs[index];
-    let img = document.querySelector(".album-poster");
-    let title = document.querySelector(".song-title");
-    let artist = document.querySelector(".song-artist");
-    let lyricsPara = document.querySelector(".lyrics-paragraph");
-    let duration = document.querySelector(".duration");
-    let timeline = document.querySelector("#timeline"); //timeline for music input[range]
-    let PlayPause = document.querySelector(".play-pause");
-    let controls = document.querySelector(".controls");
-    let lyrics = document.querySelector(".lyrics");
+    // Reset currentTime and timeline
+    this.currentTime = 0;
+    const timeline = document.querySelector("#timeline");
+    timeline.value = 0;
+
+    const song = this.songs[index];
+    const img = document.querySelector(".album-poster");
+    const title = document.querySelector(".song-title");
+    const artist = document.querySelector(".song-artist");
+    const lyricsPara = document.querySelector(".lyrics-paragraph");
+    const duration = document.querySelector(".duration");
+    const playPause = document.querySelector(".play-pause");
+    const controls = document.querySelector(".controls");
+    const lyrics = document.querySelector(".lyrics");
 
     controls.style.position = "absolute";
     controls.style.bottom = "40px";
     controls.style.left = "42.5%";
     controls.style.transform = "scale(1.5)";
     controls.style.transition = "all 0.5s ease-in-out";
-    PlayPause.innerHTML = `<i class="ri-pause-line"></i>`;
-    PlayPause.setAttribute("id", index);
+    playPause.innerHTML = `<i class="ri-pause-line"></i>`;
+    playPause.setAttribute("id", index);
     img.setAttribute("src", song.poster);
     title.innerText = song.title;
     artist.innerText = song.artist;
-    let Previndex =
-      index == 0 ? Number(this.songs.length) - 1 : Number(index) - 1;
-    console.log(Previndex);
-    let Nextindex =
-      index == Number(this.songs.length) - 1 ? 0 : Number(index) + 1;
-    console.log(Nextindex);
-    prev.setAttribute("id", Previndex);
-    next.setAttribute("id", Nextindex);
+    let curr = document.querySelector(".current-time");
+    const prevIndex = index === 0 ? this.songs.length - 1 : index - 1;
+    const nextIndex = index === this.songs.length - 1 ? 0 : index + 1;
+    document.querySelector(".prev").setAttribute("id", prevIndex);
+    document.querySelector(".next").setAttribute("id", nextIndex);
+
     lyrics.style.display = "flex";
     lyrics.style.alignItems = "center";
     lyrics.style.justifyContent = "center";
     lyricsPara.innerHTML = `
-    <div class="music-loader">
-       <span></span>
-       <span></span>
-       <span></span>
-       <span></span>
-       <span></span>
-       <span></span>
-       <span></span>
-     </div>`;
-    setTimeout(() => {
+      <div class="music-loader">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>`;
+    if (lyricsLoadedIndex !== index) {
+      setTimeout(() => {
+        lyrics.style.display = "block";
+        lyrics.style.overflowY = "scroll";
+        lyrics.style.padding = "1rem";
+        lyricsPara.innerText = song.lyrics;
+        lyricsLoadedIndex = index;
+      }, 2500);
+    } else {
+      lyricsPara.innerText = song.lyrics;
       lyrics.style.display = "block";
       lyrics.style.overflowY = "scroll";
       lyrics.style.padding = "1rem";
-      lyricsPara.innerText = song.lyrics;
-    }, 2500);
-    getRandomBlueGreyBackground();
-    let dura = String(song.duration).split(".");
-    let mins = parseInt(dura[0]);
-    let secs = dura[1] ? parseInt(dura[1].padEnd(2, "0")) : 0;
-    // Update text duration
-    duration.innerText = `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
 
-    // Convert to total ms
-    let total = minutesToMiliseconds(mins) + secondToMilisecond(secs);
-    timeline.max = total;
-    playlist1.range = setInterval(() => {
-      playlist1.currentTime += 1000;
-      if (playlist1.currentTime > audio.duration * 1000) {
-        clearInterval(playlist1.range);
-        timeline.value = 0;
-        audio.pause();
-        song.Isplay = false;
-      } else {
-        timeline.value = playlist1.currentTime;
+    getRandomBlueGreyBackground();
+
+    const dura = String(song.duration).split(".");
+    const mins = parseInt(dura[0]);
+    const secs = dura[1] ? parseInt(dura[1].padEnd(2, "0")) : 0;
+    const totalMs = mins * 60 * 1000 + secs * 1000;
+    timeline.max = totalMs;
+
+    // Update progress bar
+    this.range = setInterval(() => {
+      if (audio && !audio.paused) {
+        this.currentTime = audio.currentTime * 1000;
+        timeline.value = this.currentTime;
+        const currentMins = Math.floor(this.currentTime / 60000);
+        const currentSecs = Math.floor((this.currentTime % 60000) / 1000);
+        curr.innerText = `${currentMins}:${currentSecs
+          .toString()
+          .padStart(2, "0")}`;
+        duration.innerText = `${mins}:${secs.toString().padStart(2, "0")}`;
+        if (this.currentTime >= audio.duration * 1000) {
+          clearInterval(this.range);
+          this.range = null;
+          timeline.value = 0;
+          audio.pause();
+          song.isPlaying = false;
+          playPause.innerHTML = `<i class="ri-play-circle-fill"></i>`;
+        }
       }
-    }, 1000);
+    }, 100);
   }
 }
 
-let playlist1 = new playlist();
-let songs = async () => {
+function getRandomBlueGreyBackground() {
+  const colors = [
+    `rgba(0, 123, 255, 0.2)`,
+    `rgba(108, 117, 125, 0.15)`,
+    `rgba(40, 167, 69, 0.2)`,
+    `rgba(255, 193, 7, 0.15)`,
+    `rgba(220, 53, 69, 0.15)`,
+    `rgba(111, 66, 193, 0.2)`,
+    `rgba(23, 162, 184, 0.15)`,
+  ];
+  const shuffled = colors.sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, 3);
+  const gradient = `linear-gradient(135deg, ${selected.join(", ")})`;
+  document.querySelector(".top").style.background = gradient;
+}
+
+async function loadSongs() {
   try {
-    let response = await fetch("./songs.json");
-    let textData = await response.text();
-    let data = await JSON.parse(textData);
+    const response = await fetch("./songs.json");
+    const textData = await response.text();
+    const data = JSON.parse(textData);
+    playlist1 = new Playlist();
     data.forEach((val) => {
-      let song = new Song(
+      const song = new Song(
         val.filePath,
         val.title,
         val.artist,
@@ -152,128 +181,174 @@ let songs = async () => {
         val.poster,
         val.duration
       );
-      playlist1.addSong(song); // Add each song to the playlist
+      playlist1.addSong(song);
     });
+    playlist1.showListOfSongs();
   } catch (error) {
     console.error("Error fetching songs:", error);
   }
-};
-songs();
-
-const showMusic = () => {
-  playlist1.showListOfSongs();
-  // Show the list of songs in the console
-};
-function getRandomBlueGreyBackground() {
-  const colors = [
-    `rgba(0, 123, 255, 0.2)`, // Soft Blue
-    `rgba(108, 117, 125, 0.15)`, // Soft Grey
-    `rgba(40, 167, 69, 0.2)`, // Soft Green
-    `rgba(255, 193, 7, 0.15)`, // Soft Yellow
-    `rgba(220, 53, 69, 0.15)`, // Soft Red
-    `rgba(111, 66, 193, 0.2)`, // Soft Purple
-    `rgba(23, 162, 184, 0.15)`, // Soft Cyan
-  ];
-  const shuffled = colors.sort(() => 0.5 - Math.random());
-  console.log(shuffled);
-  const selected = shuffled.slice(0, 3);
-  const gradient = `linear-gradient(135deg, ${selected.join(", ")})`;
-
-  let top = document.querySelector(".top");
-  top.style.background = gradient;
 }
 
-window.addEventListener("load", () => {
-  showMusic();
-});
-function ClickItems(e) {
-  let itemElement = e.target.closest(".item");
-  if (!itemElement) return; // Exit if no .item element is found
+function handleItemClick(e) {
+  const itemElement = e.target.closest(".item");
+  if (!itemElement) return;
 
-  let target = itemElement.id;
-  if (playlist1.songs.some((s) => s.Isplay == true)) {
-    let index = playlist1.songs.findIndex((s) => s.Isplay == true);
-    let song = playlist1.songs[index];
-    if (index == target) {
-      audio.pause();
-      song.Isplay = false;
-      document.querySelector(
-        ".play-pause"
-      ).innerHTML = `<i class="ri-play-circle-fill"></i>`;
-    } else {
-      audio.pause();
-      song.Isplay = false;
-      let newSong = playlist1.songs[target];
-      audio = new Audio(newSong.filePath);
-      audio.play();
-      newSong.Isplay = true;
-      playlist1.loadToPlayer(target);
-      getRandomBlueGreyBackground();
-    }
+  const targetIndex = parseInt(itemElement.id);
+  const currentPlayingIndex = playlist1.songs.findIndex((s) => s.isPlaying);
+
+  if (currentPlayingIndex === targetIndex) {
+    audio.pause();
+    playlist1.songs[targetIndex].isPlaying = false;
+    document.querySelector(
+      ".play-pause"
+    ).innerHTML = `<i class="ri-play-circle-fill"></i>`;
+    document.querySelector(".music-player").classList.remove("animate-shadow");
+    clearInterval(playlist1.range);
+    playlist1.range = null;
   } else {
-    let index = itemElement.id;
-    let song = playlist1.songs[index];
-    playlist1.loadToPlayer(index);
-    if (playlist1.songs.some((s) => (song == s ? s.Isplay : NaN)) == false) {
-      audio = new Audio(song.filePath);
-      audio.play();
-      song.Isplay = true;
+    if (audio) audio.pause();
+    if (currentPlayingIndex !== -1) {
+      playlist1.songs[currentPlayingIndex].isPlaying = false;
     }
+    const newSong = playlist1.songs[targetIndex];
+    audio = new Audio(newSong.filePath);
+    audio.play();
+    document.querySelector(".music-player").classList.add("animate-shadow");
+    newSong.isPlaying = true;
+    playlist1.loadToPlayer(targetIndex);
+    getRandomBlueGreyBackground();
   }
 }
 
-document.querySelector(".play-pause").addEventListener("click", (e) => {
-  let index = Number(e.target.closest(".play-pause").id);
-  let song = playlist1.songs[index];
+function handlePlayPause(e) {
+  const button = e.target.closest(".play-pause");
+  if (!button) return;
+  const index = parseInt(e.target.closest(".play-pause").id);
+  const song = playlist1.songs[index];
+  if (audio.paused) {
+    audio.play();
+    
+    // Restart interval to resume tracking time
+    if (!playlist1.range) {
+      playlist1.range = setInterval(() => {
+        const timeline = document.querySelector("#timeline");
+        const curr = document.querySelector(".current-time");
+        const duration = document.querySelector(".duration");
 
-  if (song.Isplay) {
+        playlist1.currentTime = audio.currentTime * 1000;
+        timeline.value = playlist1.currentTime;
+
+        const currentMins = Math.floor(playlist1.currentTime / 60000);
+        const currentSecs = Math.floor((playlist1.currentTime % 60000) / 1000);
+        curr.innerText = `${currentMins}:${currentSecs
+          .toString()
+          .padStart(2, "0")}`;
+
+        const mins = Math.floor(audio.duration / 60);
+        const secs = Math.floor(audio.duration % 60);
+        duration.innerText = `${mins}:${secs.toString().padStart(2, "0")}`;
+
+        if (playlist1.currentTime >= audio.duration * 1000) {
+          clearInterval(playlist1.range);
+          playlist1.range = null;
+          timeline.value = 0;
+          audio.pause();
+          document.querySelector(".play-pause").innerHTML =
+            `<i class="ri-play-circle-fill"></i>`;
+        }
+      }, 100);
+    }
+
+  } else {
     audio.pause();
-    song.Isplay = false;
+    if (playlist1.range) {
+      clearInterval(playlist1.range);
+      playlist1.range = null;
+    }
+  }
+
+
+  // If the song is currently playing
+  if (song.isPlaying) {
+    audio.pause();
+    song.isPlaying = false;
+    musicPlayerBox.classList.remove("animate-shadow");
     clearInterval(playlist1.range);
+    playlist1.range = null;
     e.target.closest(".play-pause").innerHTML = `<i class="ri-play-circle-fill"></i>`;
   } else {
-    let songIndex = playlist1.songs.findIndex((s) => s.title == song.title);
-    audio.currentTime = playlist1.currentTime / 1000;
-    if (audio) audio.pause();
-    audio = new Audio(song.filePath);
-    playlist1.range = setInterval(() => {
-      playlist1.currentTime += 1000;
-      if (playlist1.currentTime > audio.duration * 1000) {
-        clearInterval(playlist1.range);
-        timeline.value = 0;
-        audio.pause();
-        song.Isplay = false;
-      } else {
-        timeline.value = playlist1.currentTime;
-      }
-    }, 1000);
-    audio.play();
-    song.Isplay = true;
-    e.target.closest(".play-pause").innerHTML = `<i class="ri-pause-line"></i>`;
-    if (songIndex !== index) {
+    if (!audio || audio.src !== location.origin + "/" + song.filePath) {
+      if (audio) audio.pause();
+      audio = new Audio(song.filePath);
+      audio.currentTime = playlist1.currentTime / 1000;
+      playlist1.songs.forEach((s) => (s.isPlaying = false));
+      song.isPlaying = true;
       playlist1.loadToPlayer(index);
-      getRandomBlueGreyBackground();
     }
+    audio.play();
+    musicPlayerBox.classList.add("animate-shadow");
+    song.isPlaying = true;
+    e.target.closest(".play-pause").innerHTML = `<i class="ri-pause-line"></i>`;
   }
-});
+}
 
-let musicInput = document.querySelector("#music-input");
-let searchBtn = document.querySelector("#searchBtn");
-function SearchMusic() {
-  let existing = document.querySelector(".found-song");
+function handlePrev(e) {
+  if (audio) audio.pause();
+  const index = parseInt(
+    document.querySelector(".play-pause").getAttribute("id")
+  );
+  const prevIndex = index === 0 ? playlist1.songs.length - 1 : index - 1;
+  const prevSong = playlist1.songs[prevIndex];
+  playlist1.currentTime = 0;
+  if (index !== -1) {
+    playlist1.songs[index].isPlaying = false;
+  }
+  audio = new Audio(prevSong.filePath);
+  audio.play();
+  prevSong.isPlaying = true;
+  document.querySelector(".play-pause").setAttribute("id", prevIndex);
+  playlist1.loadToPlayer(prevIndex);
+  getRandomBlueGreyBackground();
+}
+
+function handleNext(e) {
+  if (audio) audio.pause();
+  const index = parseInt(
+    document.querySelector(".play-pause").getAttribute("id")
+  );
+  const nextIndex = index === playlist1.songs.length - 1 ? 0 : index + 1;
+  const nextSong = playlist1.songs[nextIndex];
+  playlist1.currentTime = 0;
+  if (index !== -1) {
+    playlist1.songs[index].isPlaying = false;
+  }
+  audio = new Audio(nextSong.filePath);
+  audio.play();
+  nextSong.isPlaying = true;
+  document.querySelector(".play-pause").setAttribute("id", nextIndex);
+  playlist1.loadToPlayer(nextIndex);
+  getRandomBlueGreyBackground();
+}
+
+function handleSearchMusic() {
+  const existing = document.querySelector(".found-song");
   if (existing) existing.remove();
 
-  let value = document.querySelector("#music-input").value.trim().toLowerCase();
+  const value = document
+    .querySelector("#music-input")
+    .value.trim()
+    .toLowerCase();
+    console.log(value);
+  const searchBtn = document.querySelector("#searchBtn");
   if (value.length === 0) {
     searchBtn.setAttribute("class", "ri-search-line");
     return;
   }
 
-  // Find all matching songs (partial match)
-  let matchedSongs = playlist1.songs.filter((song) =>
+  const matchedSongs = playlist1.songs.filter((song) =>
     song.title.toLowerCase().includes(value)
   );
-  let found = document.createElement("div");
+  const found = document.createElement("div");
   found.classList.add("found-song");
   found.style.position = "absolute";
   found.style.display = "flex";
@@ -294,12 +369,12 @@ function SearchMusic() {
     found.innerHTML = `<h3 style="margin:auto;">Song not found</h3>`;
     return;
   }
+
   searchBtn.setAttribute("class", "ri-close-line");
-  // Show all matched songs
-  matchedSongs.forEach((song, index) => {
-    let item = document.createElement("div");
+  matchedSongs.forEach((song) => {
+    const idx = playlist1.songs.findIndex((s) => s.title === song.title);
+    const item = document.createElement("div");
     item.classList.add("item");
-    let idx = playlist1.songs.findIndex((s) => s.title == song.title);
     item.setAttribute("id", idx);
     item.style.display = "flex";
     item.style.alignItems = "center";
@@ -307,48 +382,37 @@ function SearchMusic() {
     item.style.padding = "0.5rem";
     item.style.borderRadius = "8px";
     item.style.background = "#fff2";
-
     item.innerHTML = `
-        <div class="item-img" style="width: 50px;">
-          <img src="${song.poster}" style="width: 100%; border-radius: 6px;">
-        </div>
-        <div class="item-details">
-          <h4 style="margin: 0;">${song.title}</h4>
-          <p style="margin: 0; font-size: 0.85rem;">${song.artist}</p>
-        </div>
-      `;
+      <div class="item-img" style="width: 50px;">
+        <img src="${song.poster}" style="width: 100%; border-radius: 6px;">
+      </div>
+      <div class="item-details">
+        <h4 style="margin: 0;">${song.title}</h4>
+        <p style="margin: 0; font-size: 0.85rem;">${song.artist}</p>
+      </div>`;
     found.append(item);
   });
 }
-musicInput.addEventListener("input", () => SearchMusic());
 
-document.addEventListener("DOMContentLoaded", () => {
-  const songElement = document.querySelector("main");
-  if (songElement) {
-    songElement.addEventListener("click", (e) => ClickItems(e));
-  }
-});
-let CategoryInput = document.querySelector("#category-input");
-
-CategoryInput.addEventListener("input", () => {
-  let value = document
+function handleCategorySearch() {
+  const value = document
     .querySelector("#category-input")
     .value.trim()
     .toLowerCase();
-
-  let existing = document.querySelector(".found2-song");
+  const searchBtn = document.querySelector("#searchBtn");
+  const existing = document.querySelector(".found2-song");
   if (existing) existing.remove();
+
   if (value.length === 0) {
     searchBtn.setAttribute("class", "ri-search-line");
     return;
   }
+  searchBtn.setAttribute("class", "ri-close-line");
 
-  let matchedCategories = playlist1.songs.filter(
+  const matchedCategories = playlist1.songs.filter(
     (song) => song.artist.toLowerCase() === value
   );
-
-
-  let found2 = document.createElement("div");
+  const found2 = document.createElement("div");
   found2.classList.add("found2-song");
   found2.style.position = "absolute";
   found2.style.display = "flex";
@@ -365,17 +429,20 @@ CategoryInput.addEventListener("input", () => {
   found2.style.transition = "all 0.5s ease-in-out";
   document.querySelector("section").append(found2);
 
-  searchBtn.setAttribute("class", "ri-close-line");
   if (matchedCategories.length === 0) {
     found2.innerHTML = `<h3 style="margin:auto;">Artist not found</h3>`;
     return;
   }
-  let h1 = document.createElement("h1");
+
+  searchBtn.setAttribute("class", "ri-close-line");
+  const h1 = document.createElement("h1");
+  h1.style.fontSize = "1.2rem";
   found2.append(h1);
-  matchedCategories.forEach((song, index) => {
-    let item = document.createElement("div");
+  matchedCategories.forEach((song) => {
+    const idx = playlist1.songs.findIndex((s) => s.artist === song.artist);
+    h1.innerText = song.artist;
+    const item = document.createElement("div");
     item.classList.add("item");
-    let idx = playlist1.songs.findIndex((s) => s.artist == song.artist);
     item.setAttribute("id", idx);
     item.style.display = "flex";
     item.style.alignItems = "center";
@@ -383,61 +450,132 @@ CategoryInput.addEventListener("input", () => {
     item.style.padding = "0.5rem";
     item.style.borderRadius = "8px";
     item.style.background = "#fff2";
-
-    h1.innerText = song.artist;
-    h1.style.fontSize = "1.2rem";
-
     item.innerHTML = `
       <div class="item-img" style="width: 50px;">
         <img src="${song.poster}" style="width: 100%; border-radius: 6px;">
       </div>
       <div class="item-details">
         <h4 style="margin: 0;">${song.title}</h4>
-      </div>
-    `;
+      </div>`;
     found2.append(item);
   });
+}
+document.querySelector("#music-input").addEventListener("input", () =>{
+  handleSearchMusic();
+  console.log("searching music");
+});
+document.querySelector("#category-input").addEventListener("input", () => handleCategorySearch());
+window.addEventListener("load", () => {
+  loadSongs();
 });
 
-searchBtn.addEventListener("click", () => {
-  searchBtn.addEventListener("click", () => {
-    let found = document.querySelector(".found-song");
-    let found2 = document.querySelector(".found2-song");
-  
-    if (musicInput.value.length > 0 || CategoryInput.value.length > 0) {
+document.addEventListener("DOMContentLoaded", () => {
+  const main = document.querySelector("main");
+  if (main) {
+    main.addEventListener("click", handleItemClick);
+  }
+
+  document
+    .querySelector(".play-pause")
+    .addEventListener("click", handlePlayPause);
+  document.querySelector(".prev").addEventListener("click", handlePrev);
+  document.querySelector(".next").addEventListener("click", handleNext);
+  document
+    .querySelector("#music-input")
+    .addEventListener("input", handleSearchMusic);
+  document
+    .querySelector("#category-input")
+    .addEventListener("input", handleCategorySearch);
+  document.querySelector("#timeline").addEventListener("input", (e) => {
+    if (audio) {
+      const newTime = e.target.value / 1000;
+      audio.currentTime = newTime;
+      playlist1.currentTime = e.target.value;
+    }
+  });
+
+  document.querySelector("#searchBtn").addEventListener("click", () => {
+    const musicInput = document.querySelector("#music-input");
+    const categoryInput = document.querySelector("#category-input");
+    const found = document.querySelector(".found-song");
+    const found2 = document.querySelector(".found2-song");
+    const searchBtn = document.querySelector("#searchBtn");
+
+    if (musicInput.value.length > 0 || categoryInput.value.length > 0) {
       musicInput.value = "";
-      CategoryInput.value = "";
-  
+      categoryInput.value = "";
       if (found) found.remove();
       if (found2) found2.remove();
-  
       searchBtn.setAttribute("class", "ri-search-line");
     }
   });
+
+  if (audio) {
+    audio.addEventListener("ended", () => {
+      document.querySelector(".next").click();
+    });
+    audio.addEventListener("error", () => {
+      console.error("Failed to load audio:", audio.src);
+      alert("Error loading song.");
+      document.querySelector(".next").click();
+    });
+  }
 });
 
-prev.addEventListener("click", (e) => {
-  if (audio) audio.pause();
-  let index = Number(document.querySelector(".play-pause").getAttribute("id"));
-  let prevIndex = index === 0 ? playlist1.songs.length - 1 : index - 1;
-  let prevSong = playlist1.songs[prevIndex];
-  audio = new Audio(prevSong.filePath);
-  audio.play();
-  prevSong.Isplay = true;
-  document.querySelector(".play-pause").setAttribute("id", prevIndex);
-  playlist1.loadToPlayer(prevIndex);
-  getRandomBlueGreyBackground();
+function updateLayout() {
+  let main = document.querySelector("main");
+
+  if (parseInt(getComputedStyle(main).width) <= 550) {
+    document.querySelector(".logo").innerHTML = `
+      <div>
+        <i class="ri-netease-cloud-music-line"></i>
+        <p>MusAI</p>
+      </div>
+      <input type="text" id="music-input" autocomplete="off" placeholder="Search Music">`;
+
+    document.querySelector(".nav-input").innerHTML = `
+      <input type="text" id="category-input" autocomplete="off"
+        placeholder="Search Music By Artist , Genres etc.">
+      <i id="searchBtn" class="ri-search-line"></i>`;
+  } else {
+    document.querySelector(".logo").innerHTML = `
+      <div>
+        <i class="ri-netease-cloud-music-line"></i>
+        <p>MusAI</p>
+      </div>`;
+
+    document.querySelector(".nav-input").innerHTML = `
+      <input type="text" id="music-input" autocomplete="off" placeholder="Search Music">
+      <input type="text" id="category-input" autocomplete="off"
+        placeholder="Search Music By Artist , Genres etc.">
+      <i id="searchBtn" class="ri-search-line"></i>`;
+  }
+
+  // 🔁 Re-attach event listeners after changing HTML
+  document.querySelector("#music-input").addEventListener("input",()=> handleSearchMusic());
+  document.querySelector("#category-input").addEventListener("input",()=> handleCategorySearch());
+  document.querySelector("#searchBtn").addEventListener("click", () => {
+    const musicInput = document.querySelector("#music-input");
+    const categoryInput = document.querySelector("#category-input");
+    const found = document.querySelector(".found-song");
+    const found2 = document.querySelector(".found2-song");
+    const searchBtn = document.querySelector("#searchBtn");
+
+    if (musicInput.value.length > 0 || categoryInput.value.length > 0) {
+      musicInput.value = "";
+      categoryInput.value = "";
+      if (found) found.remove();
+      if (found2) found2.remove();
+      searchBtn.setAttribute("class", "ri-search-line");
+    }
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateLayout(); // Run on page load
 });
 
-next.addEventListener("click", (e) => {
-  if (audio) audio.pause();
-  let index = Number(document.querySelector(".play-pause").getAttribute("id"));
-  let nextIndex = index === playlist1.songs.length - 1 ? 0 : index + 1;
-  let nextSong = playlist1.songs[nextIndex];
-  audio = new Audio(nextSong.filePath);
-  audio.play();
-  nextSong.Isplay = true;
-  document.querySelector(".play-pause").setAttribute("id", nextIndex);
-  playlist1.loadToPlayer(nextIndex);
-  getRandomBlueGreyBackground();
+window.addEventListener("resize", () => {
+  updateLayout(); // Run on screen resize
 });

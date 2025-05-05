@@ -12,6 +12,7 @@ html,
 body {
   width: 100%;
   height: 100%;
+  background: linear-gradient(#0f0c29, #302b63, #24243e);
 }
 
 main {
@@ -38,15 +39,21 @@ nav .logo {
 }
 nav .logo i {
   font-size: 2rem;
-  color: rgb(196, 182, 182);
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.6), rgba(0, 213, 255, 0.66), rgba(16, 129, 181, 0.5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 nav .logo p {
-  color: rgb(242, 61, 61);
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.6), rgba(0, 213, 255, 0.66), rgba(16, 129, 181, 0.5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 2rem;
 }
-nav .logo #music-input {
-  display: none;
+nav .logo-img {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 nav .nav-input {
   width: 65%;
@@ -86,7 +93,9 @@ nav .nav-input #category-input {
 }
 nav .nav-input i {
   font-size: 1.5rem;
-  color: rgba(255, 0, 0, 0.877);
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.6), rgba(0, 213, 255, 0.66), rgba(16, 129, 181, 0.5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
@@ -96,7 +105,7 @@ section {
   display: flex;
   gap: 1.5rem;
   width: 100%;
-  height: 34rem !important;
+  height: 34rem;
 }
 section .playlist-cont {
   border-radius: 12px;
@@ -203,7 +212,23 @@ section .center .music-player .controls button {
 }
 section .center .music-player .controls button i {
   font-size: 2rem;
-  color: rgb(255, 0, 0);
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.6), rgba(0, 213, 255, 0.66), rgba(16, 129, 181, 0.5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+section .center .music-player.animate-shadow {
+  animation: pulseShadow 1.5s ease-in-out infinite;
+}
+@keyframes pulseShadow {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
 }
 section .lyrics {
   width: 30%;
@@ -226,7 +251,7 @@ section .lyrics p {
   display: flex;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
-  background-color: rgba(11, 52, 128, 0.199);
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.742) 0%, rgba(0, 213, 255, 0.288), rgba(16, 129, 181, 0.779));
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .item .item-img {
@@ -309,7 +334,7 @@ section .lyrics p {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 12px;
   height: 60px;
 }
 
@@ -317,7 +342,7 @@ section .lyrics p {
   display: inline-block;
   width: 6px;
   height: 30px;
-  background: rgb(255, 0, 0); /* Spotify green */
+  background: linear-gradient(180deg, rgba(23, 220, 220, 0.6), rgba(0, 213, 255, 0.66), rgba(16, 129, 181, 0.5));
   animation: bounce 1s infinite ease-in-out;
   border-radius: 3px;
 }
@@ -366,7 +391,6 @@ section .lyrics p {
   gap: 0.4rem;
   padding: 1rem;
   border-radius: 8px;
-  animation: shine 1.5s infinite;
 }
 
 .pulse span {
@@ -508,7 +532,7 @@ section .lyrics p {
     background-position: 200% 0;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 550px) {
   main {
     height: -moz-fit-content;
     height: fit-content;
@@ -549,9 +573,6 @@ section .lyrics p {
   }
   nav .nav-input input {
     width: 100%;
-  }
-  nav .nav-input #music-input {
-    display: none;
   }
   nav .nav-input #category-input {
     width: 100%;
@@ -605,7 +626,7 @@ section .lyrics p {
   }
   section .lyrics {
     width: 100%;
-    height: 400px;
+    height: 300px;
   }
   .found-song {
     left: 4.5% !important;
